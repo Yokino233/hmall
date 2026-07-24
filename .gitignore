@@ -1,0 +1,13 @@
+target/
+*.class
+*.jar
+*.log
+*.dump
+logs/
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+.vscode/
+.sonarlint/
