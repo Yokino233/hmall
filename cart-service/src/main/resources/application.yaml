@@ -18,6 +18,19 @@ logging:
     dateformat: HH:mm:ss:SSS
   file:
     path: "logs/${spring.application.name}"
+nseata:
+  application-id: ${spring.application.name}
+  tx-service-group: hmall-tx-group
+  service:
+    vgroup-mapping:
+      hmall-tx-group: SEATA_GROUP
+    grouplist:
+      SEATA_GROUP: 192.168.137.128:8091
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 192.168.137.128:8848
+      group: SEATA_GROUP
 feign:
   sentinel:
     enabled: true

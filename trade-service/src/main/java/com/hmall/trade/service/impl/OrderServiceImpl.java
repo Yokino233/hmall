@@ -11,6 +11,7 @@ import com.hmall.trade.domain.po.OrderDetail;
 import com.hmall.trade.mapper.OrderMapper;
 import com.hmall.trade.service.IOrderDetailService;
 import com.hmall.trade.service.IOrderService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 @Service @RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements IOrderService {
     private final ItemClient itemClient;
     private final IOrderDetailService detailService;
-    @Override @Transactional
+    @Override @GlobalTransactional @Transactional
     public Long createOrder(OrderFormDTO orderFormDTO){
         List<OrderDetailDTO> detailDTOS = orderFormDTO.getDetails();
         Map<Long,Integer> itemNumMap = detailDTOS.stream().collect(Collectors.toMap(OrderDetailDTO::getItemId,OrderDetailDTO::getNum));

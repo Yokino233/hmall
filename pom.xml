@@ -36,10 +36,12 @@
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
         <sentinel.version>1.8.7</sentinel.version>
+        <seata.version>1.6.1</seata.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
         <hutool.version>5.8.11</hutool.version>
         <hm-common.version>1.0.0</hm-common.version>
         <mysql.version>8.0.23</mysql.version>
+            <seata.version>1.6.1</seata.version>
     </properties>
 
     <!-- 对依赖包进行管理 -->
