@@ -33,7 +33,7 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.hmall.item.controller
-nseata:
+seata:
   application-id: ${spring.application.name}
   tx-service-group: hmall-tx-group
   service:
@@ -42,10 +42,7 @@ nseata:
     grouplist:
       SEATA_GROUP: 192.168.137.128:8091
   registry:
-    type: nacos
-    nacos:
-      server-addr: 192.168.137.128:8848
-      group: SEATA_GROUP
+    type: file
 feign:
   sentinel:
-    enabled: true
+    enabled: false
