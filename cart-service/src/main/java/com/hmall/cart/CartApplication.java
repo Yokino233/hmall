@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
 @Import(CommonExceptionAdvice.class)
-@EnableFeignClients(basePackages = "com.hmall.api.client")
+@EnableFeignClients(basePackages = "com.hmall.api.client", defaultConfiguration = com.hmall.api.config.DefaultFeignConfig.class)
 @MapperScan("com.hmall.cart.mapper")
 @SpringBootApplication
 public class CartApplication {

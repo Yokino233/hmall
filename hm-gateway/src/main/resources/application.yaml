@@ -9,14 +9,16 @@ spring:
       discovery:
         register-enabled: false
 hm:
-  jwt:
-    location: classpath:hmall.jks
-    alias: hmall
-    password: hmall123
-    tokenTTL: 30m
   auth:
     excludePaths:
       - /search/**
       - /users/login
       - /items/**
       - /hi
+logging:
+  level:
+    com.hmall: debug
+  pattern:
+    dateformat: HH:mm:ss:SSS
+  file:
+    path: "logs/${spring.application.name}"
