@@ -79,6 +79,12 @@
                 <artifactId>hm-common</artifactId>
                 <version>${hm-common.version}</version>
             </dependency>
+            <!--hm-api-->
+            <dependency>
+                <groupId>com.heima</groupId>
+                <artifactId>hm-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!--openfeign-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

@@ -17,13 +17,12 @@ import com.hmall.common.utils.CollUtils;
 import com.hmall.common.utils.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,31 +57,17 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 
     private void handleCartItems(List<CartVO> vos) {
         Set<Long> itemIds = vos.stream().map(CartVO::getItemId).collect(Collectors.toSet());
-        // 远程调用 item-service 查询商品信息
-//        List<ItemDTO> items = queryItemsByIds(itemIds);
-//        if (CollUtils.isEmpty(items)) {
-//            return;
-//        }
-//        Map<Long, ItemDTO> itemMap = items.stream().collect(Collectors.toMap(ItemDTO::getId, Function.identity()));
-//        for (CartVO v : vos) {
-//            ItemDTO item = itemMap.get(v.getItemId());
-//            if (item == null) continue;
-//            v.setNewPrice(item.getPrice());
-//            v.setStatus(item.getStatus());
-//            v.setStock(item.getStock());
-//        }
-        List<ItemDTO> itemDTOS = itemClient.queryItemsByIds(itemIds);
-
-    }
-
-    private List<ItemDTO> queryItemsByIds(Set<Long> ids) {
-        String idsStr = ids.stream().map(String::valueOf).collect(Collectors.joining(","));
-        String url = "http://localhost:8081/items?ids=" + idsStr;
-        RestTemplate rt = new RestTemplate();
-        try {
-            return Arrays.asList(rt.getForObject(url, ItemDTO[].class));
-        } catch (Exception e) {
-            return Collections.emptyList();
+        List<ItemDTO> items = itemClient.queryItemsByIds(itemIds);
+        if (CollUtils.isEmpty(items)) {
+            return;
+        }
+        Map<Long, ItemDTO> itemMap = items.stream().collect(Collectors.toMap(ItemDTO::getId, Function.identity()));
+        for (CartVO v : vos) {
+            ItemDTO item = itemMap.get(v.getItemId());
+            if (item == null) continue;
+            v.setNewPrice(item.getPrice());
+            v.setStatus(item.getStatus());
+            v.setStock(item.getStock());
         }
     }
 
