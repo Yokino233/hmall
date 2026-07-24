@@ -1,7 +1,7 @@
 package com.hmall.gateaway.filters;
 
 import com.hmall.gateaway.config.AuthProperties;
-import com.hmall.gateaway.util.JwtTool;
+import com.hmall.common.utils.JwtTool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

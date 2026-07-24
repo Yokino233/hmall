@@ -1,12 +1,15 @@
-package com.hmall.user.config;
+package com.hmall.common.config;
+
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.io.Resource;
+
 import java.time.Duration;
+
 @Data
 @RefreshScope
-@ConfigurationProperties(prefix="hm.jwt")
+@ConfigurationProperties(prefix = "hm.jwt")
 public class JwtProperties {
     private Resource location;
     private String password;
