@@ -8,6 +8,10 @@ spring:
       server-addr: 192.168.137.128:8848
       discovery:
         register-enabled: false
+    sentinel:
+      transport:
+        dashboard: 192.168.137.128:8858
+      eager: true
 hm:
   auth:
     excludePaths:

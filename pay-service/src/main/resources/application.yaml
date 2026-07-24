@@ -8,3 +8,9 @@ spring:
   cloud:
     nacos:
       server-addr: 192.168.137.128:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.137.128:8858
+feign:
+  sentinel:
+    enabled: true

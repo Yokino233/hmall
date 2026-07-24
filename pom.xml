@@ -35,6 +35,7 @@
         <org.projectlombok.version>1.18.30</org.projectlombok.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <sentinel.version>1.8.7</sentinel.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
         <hutool.version>5.8.11</hutool.version>
         <hm-common.version>1.0.0</hm-common.version>
