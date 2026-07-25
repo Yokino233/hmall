@@ -80,6 +80,11 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
         remove(queryWrapper);
     }
 
+    @Override
+    public void cleanCartByUserId(Long userId) {
+        lambdaUpdate().eq(Cart::getUserId, userId).remove();
+    }
+
     private void checkCartsFull(Long userId) {
         int count = lambdaQuery().eq(Cart::getUserId, userId).count();
         if (count >= 10) {

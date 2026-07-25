@@ -87,16 +87,14 @@
             <artifactId>caffeine</artifactId>
             <optional>true</optional>
         </dependency>
-        <!--AMQP/RabbitMQ— 按需引入 -->
+        <!--AMQP/RabbitMQ-->
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-amqp</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
