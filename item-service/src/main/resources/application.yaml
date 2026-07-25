@@ -11,6 +11,12 @@ spring:
     sentinel:
       transport:
         dashboard: 192.168.137.128:8858
+  rabbitmq:
+    host: 192.168.137.128
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
 logging:
   level:
     com.hmall: debug
