@@ -17,6 +17,13 @@ spring:
     virtual-host: /
     username: guest
     password: guest
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 2000
 logging:
   level:
     com.hmall: debug

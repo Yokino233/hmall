@@ -14,6 +14,9 @@ import com.hmall.trade.service.IOrderDetailService;
 import com.hmall.trade.service.IOrderService;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +45,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
         detailService.saveBatch(details);
 
         // 发 MQ 消息：异步扣库存、清购物车
-        rabbitTemplate.convertAndSend(MqConfig.ORDER_EXCHANGE, "stock", detailDTOS);
+        String msgId = order.getId() + "-" + System.currentTimeMillis();
+        rabbitTemplate.convertAndSend(MqConfig.ORDER_EXCHANGE, "stock", detailDTOS, m -> {
+            m.getMessageProperties().setMessageId(msgId);
+            return m;
+        });
         rabbitTemplate.convertAndSend(MqConfig.ORDER_EXCHANGE, "cart", order.getUserId());
 
         return order.getId();

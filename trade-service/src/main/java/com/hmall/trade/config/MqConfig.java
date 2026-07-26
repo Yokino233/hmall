@@ -5,6 +5,7 @@ import com.rabbitmq.client.Connection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -17,25 +18,46 @@ public class MqConfig {
     public static final String ORDER_EXCHANGE = "trade.order";
     public static final String STOCK_QUEUE = "stock.deduct";
     public static final String CART_QUEUE = "cart.clean";
+    public static final String DLX_EXCHANGE = "trade.dlx";
+    public static final String STOCK_DLQ = "stock.deduct.dlq";
 
+    private final RabbitTemplate rabbitTemplate;
     private final ConnectionFactory connectionFactory;
 
-    public MqConfig(ConnectionFactory connectionFactory) {
+    public MqConfig(RabbitTemplate rabbitTemplate, ConnectionFactory connectionFactory) {
+        this.rabbitTemplate = rabbitTemplate;
         this.connectionFactory = connectionFactory;
     }
 
     @PostConstruct
     public void init() {
+        // 发送者确认回调
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            if (ack) {
+                log.debug("MQ 确认收到消息: {}", correlationData);
+            } else {
+                log.error("MQ 确认失败: {}, cause: {}", correlationData, cause);
+            }
+        });
+
+        // 创建交换机、队列、死信队列
         try {
-            log.info("正在连接 RabbitMQ {}:5672...", "192.168.137.128");
             Connection conn = (Connection) connectionFactory.createConnection().getDelegate();
             Channel ch = conn.createChannel();
+
+            ch.exchangeDeclare(DLX_EXCHANGE, "direct", true);
+            ch.queueDeclare(STOCK_DLQ, true, false, false, null);
+            ch.queueBind(STOCK_DLQ, DLX_EXCHANGE, "stock");
+
             ch.exchangeDeclare(ORDER_EXCHANGE, "direct", true);
-            ch.queueDeclare(STOCK_QUEUE, true, false, false, null);
+            ch.queueDeclare(STOCK_QUEUE, true, false, false,
+                    java.util.Map.of("x-dead-letter-exchange", DLX_EXCHANGE,
+                            "x-dead-letter-routing-key", "stock"));
             ch.queueDeclare(CART_QUEUE, true, false, false, null);
             ch.queueBind(STOCK_QUEUE, ORDER_EXCHANGE, "stock");
             ch.queueBind(CART_QUEUE, ORDER_EXCHANGE, "cart");
-            log.info("RabbitMQ 队列和交换机已创建");
+
+            log.info("RabbitMQ 队列/交换机/死信队列已创建");
             ch.close();
         } catch (Exception e) {
             log.error("RabbitMQ 初始化失败", e);

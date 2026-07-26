@@ -17,6 +17,12 @@ spring:
     virtual-host: /
     username: guest
     password: guest
+    publisher-confirm-type: correlated
+    template:
+      retry:
+        enabled: true
+        max-attempts: 3
+        initial-interval: 2000
 seata:
   application-id: ${spring.application.name}
   tx-service-group: hmall-tx-group
