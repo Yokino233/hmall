@@ -49,6 +49,10 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return exchange.getResponse().setComplete();
         }
         String token = tokenList.get(0);
+        // 去掉 "Bearer " 前缀
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
 
         // 校验并解析token
         Long userId;
