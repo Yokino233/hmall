@@ -1,2 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hmall.common.config.TraceIdAutoConfiguration
+com.hmall.common.config.MyBatisConfig,\
+com.hmall.common.config.MvcConfig,\
+com.hmall.common.config.JsonConfig,\
+com.hmall.common.config.SecurityConfig,\
+com.hmall.common.config.TraceIdAutoConfiguration,\
+com.hmall.common.config.TraceIdServletConfiguration
