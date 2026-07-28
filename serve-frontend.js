@@ -23,8 +23,11 @@ const MIME = {
 };
 
 http.createServer((req, res) => {
+  // 去掉查询参数
+  const urlPath = req.url.split('?')[0];
+  
   // API 请求 → 代理到 Gateway
-  if (req.url.startsWith('/api')) {
+  if (urlPath.startsWith('/api')) {
     const apiPath = req.url.replace('/api', '');
     const options = {
       hostname: GATEWAY.host,
@@ -48,12 +51,12 @@ http.createServer((req, res) => {
   }
 
   // 静态文件
-  let filePath = path.join(ROOT, req.url === '/' ? 'index.html' : req.url);
+  let filePath = path.join(ROOT, urlPath === '/' ? 'index.html' : urlPath);
   const ext = path.extname(filePath).toLowerCase();
 
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      filePath = path.join(ROOT, 'hmall-portal', req.url === '/' ? 'index.html' : req.url);
+      filePath = path.join(ROOT, 'hmall-portal', urlPath === '/' ? 'index.html' : urlPath);
       fs.readFile(filePath, (err2, data2) => {
         if (err2) {
           res.writeHead(404, { 'Content-Type': 'text/plain' });
