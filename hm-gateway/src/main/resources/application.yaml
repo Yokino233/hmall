@@ -8,6 +8,32 @@ spring:
       server-addr: 192.168.137.128:8848
       discovery:
         register-enabled: false
+    gateway:
+      routes:
+        - id: item
+          uri: lb://item-service
+          predicates:
+            - Path=/items/**
+        - id: search
+          uri: lb://item-service
+          predicates:
+            - Path=/search/**
+        - id: cart
+          uri: lb://cart-service
+          predicates:
+            - Path=/carts/**
+        - id: user
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+        - id: order
+          uri: lb://trade-service
+          predicates:
+            - Path=/orders/**
+        - id: pay
+          uri: lb://pay-service
+          predicates:
+            - Path=/pay-orders/**
     sentinel:
       transport:
         dashboard: 192.168.137.128:8858
