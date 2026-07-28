@@ -71,6 +71,18 @@ services:
     volumes:
       - es-data:/usr/share/elasticsearch/data
 
+  seata:
+    image: docker.m.daocloud.io/seataio/seata-server:1.6.1
+    container_name: seata-server
+    restart: unless-stopped
+    ports:
+      - "8091:8091"
+      - "7091:7091"
+    environment:
+      SEATA_IP: 192.168.137.128
+    volumes:
+      - /home/hd/seata-server/seata/conf:/seata-server/resources
+
 volumes:
   mysql-data:
   es-data:
