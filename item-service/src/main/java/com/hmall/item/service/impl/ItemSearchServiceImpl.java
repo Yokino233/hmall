@@ -93,10 +93,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     @Override
     public void saveOrUpdateItems(List<Item> items) {
-        List<ItemDoc> docs = items.stream()
-                .map(this::convertToDoc)
-                .collect(Collectors.toList());
-        esTemplate.save(docs, IndexCoordinates.of("item"));
+        // 分批写入 ES，每批 500 条，避免 bulk 超限
+        int batchSize = 500;
+        for (int i = 0; i < items.size(); i += batchSize) {
+            int end = Math.min(i + batchSize, items.size());
+            List<Item> batch = items.subList(i, end);
+            List<ItemDoc> docs = batch.stream()
+                    .map(this::convertToDoc)
+                    .collect(Collectors.toList());
+            esTemplate.save(docs, IndexCoordinates.of("item"));
+            log.debug("ES 批量写入 {}~{} / {}", i, end, items.size());
+        }
     }
 
     @Override
