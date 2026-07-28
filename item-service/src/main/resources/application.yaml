@@ -24,6 +24,8 @@ spring:
           enabled: true
           max-attempts: 3
           initial-interval: 2000
+  elasticsearch:
+    uris: http://192.168.137.128:9200
 logging:
   level:
     com.hmall: debug
