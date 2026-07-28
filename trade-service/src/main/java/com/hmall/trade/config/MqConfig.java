@@ -16,10 +16,7 @@ import javax.annotation.PostConstruct;
 public class MqConfig {
 
     public static final String ORDER_EXCHANGE = "trade.order";
-    public static final String STOCK_QUEUE = "stock.deduct";
-    public static final String CART_QUEUE = "cart.clean";
     public static final String DLX_EXCHANGE = "trade.dlx";
-    public static final String STOCK_DLQ = "stock.deduct.dlq";
 
     /** 支付超时延迟队列（TTL 30分钟） */
     public static final String PAY_TIMEOUT_QUEUE = "pay.timeout";
@@ -50,16 +47,8 @@ public class MqConfig {
             Channel ch = conn.createChannel();
 
             ch.exchangeDeclare(DLX_EXCHANGE, "direct", true);
-            ch.queueDeclare(STOCK_DLQ, true, false, false, null);
-            ch.queueBind(STOCK_DLQ, DLX_EXCHANGE, "stock");
 
             ch.exchangeDeclare(ORDER_EXCHANGE, "direct", true);
-            ch.queueDeclare(STOCK_QUEUE, true, false, false,
-                    java.util.Map.of("x-dead-letter-exchange", DLX_EXCHANGE,
-                            "x-dead-letter-routing-key", "stock"));
-            ch.queueDeclare(CART_QUEUE, true, false, false, null);
-            ch.queueBind(STOCK_QUEUE, ORDER_EXCHANGE, "stock");
-            ch.queueBind(CART_QUEUE, ORDER_EXCHANGE, "cart");
 
             // 支付超时队列（TTL 30分钟 → DLQ）
             ch.queueDeclare(PAY_TIMEOUT_DLQ, true, false, false, null);
