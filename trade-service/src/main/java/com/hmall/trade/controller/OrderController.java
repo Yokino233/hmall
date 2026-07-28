@@ -25,4 +25,7 @@ public class OrderController {
     public Long createOrder(@RequestBody OrderFormDTO orderFormDTO){return orderService.createOrder(orderFormDTO);}
     @PutMapping("/{orderId}")
     public void markOrderPaySuccess(@PathVariable("orderId")Long orderId){orderService.markOrderPaySuccess(orderId);}
+    @ApiOperation("取消订单（仅未支付可取消）")
+    @PutMapping("/{orderId}/cancel")
+    public void cancelOrder(@PathVariable("orderId") Long orderId){orderService.cancelOrder(orderId);}
 }

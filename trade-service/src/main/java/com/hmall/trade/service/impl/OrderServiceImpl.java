@@ -4,9 +4,11 @@ import com.hmall.api.client.ItemClient;
 import com.hmall.api.dto.ItemDTO;
 import com.hmall.api.dto.OrderDetailDTO;
 import com.hmall.common.exception.BadRequestException;
+import com.hmall.common.exception.BizIllegalException;
 import com.hmall.common.utils.UserContext;
 import com.hmall.trade.config.MqConfig;
 import com.hmall.trade.domain.dto.OrderFormDTO;
+import com.hmall.trade.domain.enums.OrderStatus;
 import com.hmall.trade.domain.po.Order;
 import com.hmall.trade.domain.po.OrderDetail;
 import com.hmall.trade.mapper.OrderMapper;
@@ -40,7 +42,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
         if(items==null||items.size()<itemIds.size())throw new BadRequestException("商品不存在");
         int total=0; for(ItemDTO item:items)total+=item.getPrice()*itemNumMap.get(item.getId());
         Order order=new Order(); order.setTotalFee(total); order.setPaymentType(orderFormDTO.getPaymentType());
-        order.setUserId(UserContext.getUser()); order.setStatus(1); save(order);
+        order.setUserId(UserContext.getUser()); order.setStatus(OrderStatus.UNPAID.getValue()); save(order);
         List<OrderDetail> details=buildDetails(order.getId(),items,itemNumMap);
         detailService.saveBatch(details);
 
@@ -52,11 +54,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
         });
         rabbitTemplate.convertAndSend(MqConfig.ORDER_EXCHANGE, "cart", order.getUserId());
 
+        // 发支付超时消息（30分钟 TTL，到期未支付则自动取消）
+        rabbitTemplate.convertAndSend(MqConfig.ORDER_EXCHANGE, "pay.timeout", order.getId());
+
         return order.getId();
     }
     @Override
     public void markOrderPaySuccess(Long orderId){
-        Order order=new Order(); order.setId(orderId); order.setStatus(2); order.setPayTime(LocalDateTime.now()); updateById(order);
+        Order order= lambdaQuery().eq(Order::getId, orderId).one();
+        if(order == null) throw new BizIllegalException("订单不存在");
+        if(!OrderStatus.of(order.getStatus()).canPay()) throw new BizIllegalException("订单状态不正确，无法支付");
+        order.setStatus(OrderStatus.PAID.getValue());
+        order.setPayTime(LocalDateTime.now());
+        updateById(order);
+    }
+    @Override @Transactional
+    public void cancelOrder(Long orderId){
+        Order order = lambdaQuery().eq(Order::getId, orderId).one();
+        if(order == null) throw new BizIllegalException("订单不存在");
+        if(!OrderStatus.of(order.getStatus()).canCancel()) throw new BizIllegalException("当前订单状态不允许取消");
+        order.setStatus(OrderStatus.CANCELLED.getValue());
+        updateById(order);
     }
     private List<OrderDetail> buildDetails(Long orderId,List<ItemDTO> items,Map<Long,Integer> numMap){
         List<OrderDetail> details=new ArrayList<>(items.size());

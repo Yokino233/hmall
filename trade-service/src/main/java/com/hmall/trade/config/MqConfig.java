@@ -21,6 +21,10 @@ public class MqConfig {
     public static final String DLX_EXCHANGE = "trade.dlx";
     public static final String STOCK_DLQ = "stock.deduct.dlq";
 
+    /** 支付超时延迟队列（TTL 30分钟） */
+    public static final String PAY_TIMEOUT_QUEUE = "pay.timeout";
+    public static final String PAY_TIMEOUT_DLQ = "pay.timeout.dlq";
+
     private final RabbitTemplate rabbitTemplate;
     private final ConnectionFactory connectionFactory;
 
@@ -56,6 +60,15 @@ public class MqConfig {
             ch.queueDeclare(CART_QUEUE, true, false, false, null);
             ch.queueBind(STOCK_QUEUE, ORDER_EXCHANGE, "stock");
             ch.queueBind(CART_QUEUE, ORDER_EXCHANGE, "cart");
+
+            // 支付超时队列（TTL 30分钟 → DLQ）
+            ch.queueDeclare(PAY_TIMEOUT_DLQ, true, false, false, null);
+            ch.queueBind(PAY_TIMEOUT_DLQ, DLX_EXCHANGE, "pay.timeout");
+            ch.queueDeclare(PAY_TIMEOUT_QUEUE, true, false, false,
+                    java.util.Map.of("x-dead-letter-exchange", DLX_EXCHANGE,
+                            "x-dead-letter-routing-key", "pay.timeout",
+                            "x-message-ttl", 30 * 60 * 1000)); // 30分钟
+            ch.queueBind(PAY_TIMEOUT_QUEUE, ORDER_EXCHANGE, "pay.timeout");
 
             log.info("RabbitMQ 队列/交换机/死信队列已创建");
             ch.close();
