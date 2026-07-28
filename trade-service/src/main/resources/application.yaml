@@ -1,6 +1,11 @@
 server:
   port: 8084
 spring:
+  datasource:
+    url: jdbc:mysql://192.168.137.128:3306/hmall?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123
+    driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: trade-service
   profiles:
@@ -53,3 +58,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

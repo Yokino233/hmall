@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Import;
 @EnableRabbit
 @Import(CommonExceptionAdvice.class)
 @MapperScan("com.hmall.item.mapper")
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration.class
+})
 public class ItemApplication {
     public static void main(String[] args) {
         SpringApplication.run(ItemApplication.class, args);
