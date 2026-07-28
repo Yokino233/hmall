@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: hm-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "123"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p123"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  nacos:
+    image: nacos/nacos-server:v2.1.0-slim
+    container_name: hm-nacos
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: "123"
+      MYSQL_SERVICE_DB_PARAM: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai"
+      TZ: Asia/Shanghai
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+
+  rabbitmq:
+    image: docker.m.daocloud.io/library/rabbitmq:3.12-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  sentinel:
+    image: docker.1panel.live/bladex/sentinel-dashboard:1.8.7
+    container_name: sentinel-dashboard
+    restart: unless-stopped
+    environment:
+      AUTH_USERNAME: sentinel
+      AUTH_PASSWORD: sentinel
+    ports:
+      - "8858:8858"
+
+  elasticsearch:
+    image: docker.m.daocloud.io/elasticsearch:7.17.10
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      xpack.security.enabled: "false"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+volumes:
+  mysql-data:
+  es-data:
