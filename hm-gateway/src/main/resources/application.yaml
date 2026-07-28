@@ -13,6 +13,11 @@ spring:
         dashboard: 192.168.137.128:8858
       eager: true
 hm:
+  jwt:
+    location: classpath:hmall.jks
+    alias: hmall
+    password: hmall123
+    tokenTTL: 30m
   auth:
     excludePaths:
       - /search/**
