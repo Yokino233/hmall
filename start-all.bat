@@ -1,41 +1,51 @@
 @echo off
-echo ===========================================
-echo   Hmall Starter - Do NOT close this window!
-echo ===========================================
-set JAVA="C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe"
+title Hmall Starter
+set JAVA=C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java
 set OPTS=--add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED
 
-echo Starting Gateway (8080)...
-start "Gateway" %JAVA% %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\hm-gateway\target\hm-gateway-1.0.0.jar
-echo Gateway launched.
+echo Starting services...
+echo ========================================
 
-timeout /t 3 >nul
-echo Starting Item (8081)...
-start "Item" %JAVA% %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\item-service\target\item-service.jar
-echo Item launched.
+echo Gateway...
+start "GW" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\hm-gateway\target\hm-gateway-1.0.0.jar
+ping -n 5 127.0.0.1 >nul
 
-timeout /t 3 >nul
-echo Starting User (8083)...
-start "User" %JAVA% %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\user-service\target\user-service.jar
-echo User launched.
+echo Item...
+start "Item" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\item-service\target\item-service.jar
+ping -n 4 127.0.0.1 >nul
 
-echo Starting Frontend (3000)...
-start "Frontend" node C:\bc1\cq\sky-take-out\hmall\serve-frontend.js
-echo Frontend launched.
+echo Cart...
+start "Cart" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\cart-service\target\cart-service.jar
+ping -n 4 127.0.0.1 >nul
+
+echo User...
+start "User" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\user-service\target\user-service.jar
+ping -n 4 127.0.0.1 >nul
+
+echo Trade...
+start "Trade" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\trade-service\target\trade-service.jar
+ping -n 4 127.0.0.1 >nul
+
+echo Pay...
+start "Pay" "%JAVA%" %OPTS% -jar C:\bc1\cq\sky-take-out\hmall\pay-service\target\pay-service.jar
+ping -n 4 127.0.0.1 >nul
+
+echo Frontend...
+start "FE" node C:\bc1\cq\sky-take-out\hmall\serve-frontend.js
+
+echo ========================================
+echo All launched, waiting 35 seconds...
+ping -n 35 127.0.0.1 >nul
 
 echo.
-echo ===========================================
-echo Waiting 30s for services to start...
-timeout /t 30 >nul
-
 echo Testing...
-curl -s http://localhost:8080/items/search?key=test >nul && echo [OK] Gateway || echo [FAIL] Gateway
-curl -s http://localhost:8081/items/search?key=test >nul && echo [OK] Item || echo [FAIL] Item  
-curl -s http://localhost:3000 >nul && echo [OK] Frontend || echo [FAIL] Frontend
+curl -s -o NUL http://localhost:8080/ && echo [PASS] Gateway || echo [FAIL] Gateway
+curl -s -o NUL http://localhost:8081/ && echo [PASS] Item || echo [FAIL] Item
+curl -s -o NUL http://localhost:3000/ && echo [PASS] Frontend || echo [FAIL] Frontend
 
 echo.
-echo ===========================================
-echo   Done! Open http://localhost:3000
-echo   Login: Jack / 123
-echo ===========================================
+echo ========================================
+echo Open http://localhost:3000
+echo Login: Jack / 123
+echo ========================================
 pause

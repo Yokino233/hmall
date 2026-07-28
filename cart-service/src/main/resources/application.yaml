@@ -63,3 +63,6 @@ management:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+mybatis-plus:
+  type-enums-package: com.hmall.cart.service.enums
