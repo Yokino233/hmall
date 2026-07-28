@@ -1,9 +1,12 @@
 target/
 *.class
 *.jar
+*.war
 *.log
 *.dump
 logs/
+
+# IDE
 .idea/
 *.iml
 .settings/
@@ -11,3 +14,18 @@ logs/
 .classpath
 .vscode/
 .sonarlint/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+*.zip
+*.tar.gz
+
+# Temp
+temp/
+*.tmp
+
+# Course materials (not part of the project source)
+hmall-frontend/
