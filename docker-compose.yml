@@ -75,6 +75,9 @@ services:
     image: docker.m.daocloud.io/seataio/seata-server:1.6.1
     container_name: seata-server
     restart: unless-stopped
+    depends_on:
+      nacos:
+        condition: service_started
     ports:
       - "8091:8091"
       - "7091:7091"
