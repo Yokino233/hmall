@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
-const ROOT = path.resolve(__dirname, '..', 'hmall-frontend');
+const ROOT = path.resolve(__dirname, 'hmall-frontend');
 const GATEWAY = { host: 'localhost', port: 8080 };
 
 const MIME = {
