@@ -1,38 +1,26 @@
 @echo off
-title Hmall Starter
+title Hmall
 
-set JAVA=C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe
+echo ============================================
+echo  Hmall - Starting 6 services + frontend...
+echo ============================================
+
+cd /d C:\bc1\cq\hmall
+
 set OPTS=--add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED
-set BASE=C:\bc1\cq\sky-take-out\hmall
+set JAVA=C:\PROGRA~1\ECLIPS~1\jdk-17.0.19.10-hotspot\bin\java.exe
 
-echo ===========================================
-echo   Hmall - 7 services launching...
-echo ===========================================
-
-echo Gateway... && start "GW" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\hm-gateway\target\hm-gateway-1.0.0.jar" && pause"
-timeout /t 4 /nobreak >nul
-
-echo Item... && start "IT" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\item-service\target\item-service.jar" && pause"
-timeout /t 3 /nobreak >nul
-
-echo Cart... && start "CT" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\cart-service\target\cart-service.jar" && pause"
-timeout /t 3 /nobreak >nul
-
-echo User... && start "US" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\user-service\target\user-service.jar" && pause"
-timeout /t 3 /nobreak >nul
-
-echo Trade... && start "TR" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\trade-service\target\trade-service.jar" && pause"
-timeout /t 3 /nobreak >nul
-
-echo Pay... && start "PY" cmd /c ""%JAVA%" %OPTS% -jar "%BASE%\pay-service\target\pay-service.jar" && pause"
-timeout /t 3 /nobreak >nul
-
-echo Frontend... && start "FE" cmd /c "node "%BASE%\serve-frontend.js" && pause"
+echo [1/7] Gateway   8080 && start "GW" "%JAVA%" %OPTS% -jar hm-gateway\target\hm-gateway-1.0.0.jar && timeout /t 6 /nobreak >/dev/null
+echo [2/7] Item      8081 && start "IT" "%JAVA%" %OPTS% -jar item-service\target\item-service.jar  && timeout /t 5 /nobreak >/dev/null
+echo [3/7] User      8083 && start "US" "%JAVA%" %OPTS% -jar user-service\target\user-service.jar  && timeout /t 2 /nobreak >/dev/null
+echo [4/7] Cart      8082 && start "CT" "%JAVA%" %OPTS% -jar cart-service\target\cart-service.jar  && timeout /t 2 /nobreak >/dev/null
+echo [5/7] Trade     8084 && start "TR" "%JAVA%" %OPTS% -jar trade-service\target\trade-service.jar  && timeout /t 2 /nobreak >/dev/null
+echo [6/7] Pay       8085 && start "PY" "%JAVA%" %OPTS% -jar pay-service\target\pay-service.jar    && timeout /t 2 /nobreak >/dev/null
+echo [7/7] Frontend  3000 && start "FE" node serve-frontend.js
 
 echo.
-echo ===========================================
-echo   All 7 launched. Wait 40s.
-echo   Open: http://localhost:3000
+echo ============================================
+echo   Wait 45s, then http://localhost:3000
 echo   Login: Jack / 123
-echo ===========================================
+echo ============================================
 pause

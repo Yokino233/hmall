@@ -29,3 +29,6 @@ temp/
 
 # Course materials (not part of the project source)
 hmall-frontend/
+# Docker volumes & data
+docker-compose.override.yml
+data/
