@@ -6,6 +6,7 @@
     <toRun name="User" type="SpringBootApplicationConfigurationType" />
     <toRun name="Trade" type="SpringBootApplicationConfigurationType" />
     <toRun name="Pay" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Frontend" type="ShConfigurationType" />
     <method v="2" />
   </configuration>
 </component>
