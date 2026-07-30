@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="🚀 全部启动" type="CompoundRunConfigurationType">
+    <toRun name="Gateway" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Item" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Cart" type="SpringBootApplicationConfigurationType" />
+    <toRun name="User" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Trade" type="SpringBootApplicationConfigurationType" />
+    <toRun name="Pay" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

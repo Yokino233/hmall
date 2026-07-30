@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Gateway" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="hm-gateway" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.hmall.gateaway.GatewayApplication" />
+    <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
