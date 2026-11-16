@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Frontend" type="BatchConfigurationType" scriptName="frontend.bat">
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    <method v="2" />
-  </configuration>
-</component>

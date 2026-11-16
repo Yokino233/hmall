@@ -31,3 +31,12 @@ temp/
 # Docker volumes & data
 docker-compose.override.yml
 data/
+# Secrets: never commit keystores, signing keys or local overrides
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+application-dev.yaml
+application-local.yaml
+.env*
